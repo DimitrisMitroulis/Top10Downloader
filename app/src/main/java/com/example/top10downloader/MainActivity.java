@@ -9,6 +9,8 @@ import android.view.View;
 
 import java.util.Objects;
 
+import static java.lang.Thread.sleep;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main activity";
 
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: starting AsyncTask");
         DownloadData downloadData = new DownloadData();
         downloadData.execute("URL");
+
         Log.d(TAG, "onCreate: Done");
 
 
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
             Log.d(TAG, "onPostExecute: parameter is "+s);
         }
 
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             Log.d(TAG, "doInBackground:  starts with "+ strings[0]);
+            Log.d(TAG, "onPostExecute: DOWNLOADING");
             return "do in background Completed";
         }
     }
