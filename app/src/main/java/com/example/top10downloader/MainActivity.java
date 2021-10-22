@@ -32,20 +32,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         hideNavBar();
-
+        Log.d(TAG, "onCreate: starting AsyncTask");
         button =  findViewById(R.id.button);
         View.OnClickListener ButtonListener = view -> {
-            Log.d(TAG, "onCreate: starting AsyncTask");
+
             DownloadData downloadData = new DownloadData();
             downloadData.execute("URL");
-            Log.d(TAG, "onCreate: Done");
+
             button.setVisibility(View.GONE);//View.VISIBLE
             buttonState = View.GONE;
-
         };
-
         button.setOnClickListener(ButtonListener);
-
+        Log.d(TAG, "onCreate: Done");
     }
 
     @Override
@@ -53,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         buttonState = savedInstanceState.getInt(STATE_BUTTON);
         button.setVisibility(buttonState);
-
-
     }
 
     @Override
@@ -94,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private String downloadFXML(String urlPath) {
-            StringBuilder xmlResponse = new StringBuilder();
+            StringBuilder xmlResult = new StringBuilder();
 
             try {
                 URL url = new URL(urlPath);
@@ -102,6 +98,19 @@ public class MainActivity extends AppCompatActivity {
                 int response = connection.getResponseCode();
                 Log.d(TAG, "downloadFXML: The response code is " + response);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                int charsRead;
+                char[] inputBuffer = new char[500];
+                while(true){
+                    charsRead = reader.read();
+                    if(charsRead<0)
+                        break;
+                    if(charsRead>0){
+                        xmlResult.append(String.copyValueOf(inputBuffer,1,charsRead));
+                    }
+
+                reader.close();
+                }
             } catch (MalformedURLException e) {
                 Log.d(TAG, "downloadFXML: Invalid URL" + e.getMessage());
             } catch (IOException e) {
