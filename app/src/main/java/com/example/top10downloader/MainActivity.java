@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static java.lang.Thread.sleep;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main activity";
     private Button button;
     private int buttonState;
-    private static final String  STATE_BUTTON = "buttonState";
+    private static final String STATE_BUTTON = "buttonState";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         hideNavBar();
         Log.d(TAG, "onCreate: starting AsyncTask");
-        button =  findViewById(R.id.button);
+        button = findViewById(R.id.button);
         View.OnClickListener ButtonListener = view -> {
 
             DownloadData downloadData = new DownloadData();
-            downloadData.execute("URL");
+            downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml");
 
             button.setVisibility(View.GONE);//View.VISIBLE
             buttonState = View.GONE;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(STATE_BUTTON,buttonState);
+        outState.putInt(STATE_BUTTON, buttonState);
         super.onSaveInstanceState(outState);
     }
 
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
             Log.d(TAG, "onPostExecute: parameter is " + s);
         }
 
@@ -101,22 +101,27 @@ public class MainActivity extends AppCompatActivity {
 
                 int charsRead;
                 char[] inputBuffer = new char[500];
-                while(true){
+                while (true) {
                     charsRead = reader.read();
-                    if(charsRead<0)
+                    if (charsRead < 0)
                         break;
-                    if(charsRead>0){
-                        xmlResult.append(String.copyValueOf(inputBuffer,1,charsRead));
+                    if (charsRead > 0) {
+                        xmlResult.append(String.copyValueOf(inputBuffer, 1, charsRead));
                     }
-
-                reader.close();
                 }
+                reader.close();
+
+                return xmlResult.toString();
+
             } catch (MalformedURLException e) {
                 Log.d(TAG, "downloadFXML: Invalid URL" + e.getMessage());
+            }catch(SecurityException e){
+                Log.d(TAG, "downloadFXML: Security Exception,needs permission"+e.getMessage());
             } catch (IOException e) {
-                Log.d(TAG, "downloadFXML: Error loading data:"+e.getMessage());
+                Log.d(TAG, "downloadFXML: Other error" + e.getMessage());
+                e.printStackTrace();
             }
-            return null;
+            return null; 
         }
 
     }
