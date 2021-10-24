@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         xmlResult.append(String.copyValueOf(inputBuffer, 1, charsRead));
                     }
                 }
-                reader.close();
+                reader.close();//when buffered reader closes, input Stream reader and input stream closes as well
 
                 return xmlResult.toString();
 
