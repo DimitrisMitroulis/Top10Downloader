@@ -123,8 +123,10 @@ public class MainActivity extends AppCompatActivity {
             } catch(SecurityException e) {
                 Log.e(TAG, "downloadXML: Security Exception.  Needs permisson? " + e.getMessage());
             }
-            return "kati";
+            return null;
         }
 
     }
+
+
 }
