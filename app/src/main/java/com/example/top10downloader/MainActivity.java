@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");
+
     }
 
     @Override
@@ -52,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         buttonState = savedInstanceState.getInt(STATE_BUTTON);
         button.setVisibility(buttonState);
-    }
+    }//to save state of button
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(STATE_BUTTON, buttonState);
         super.onSaveInstanceState(outState);
-    }
+    }//to save state of button
 
     private void hideNavBar() {
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -84,14 +85,12 @@ public class MainActivity extends AppCompatActivity {
             String RssFeed = downloadFXML(strings[0]);
             if (RssFeed == null) {
                 Log.e(TAG, "doInBackground: Error downloading");
-
             }
             return RssFeed;
         }
 
-        private String downloadFXML(String urlPath) {
+        private String downloadFXML(String urlPath) {//the reuturn from this method goes to onPostExecute
             StringBuilder xmlResult = new StringBuilder();
-
 
             try {
                 URL url = new URL(urlPath);
@@ -104,11 +103,13 @@ public class MainActivity extends AppCompatActivity {
                 char[] inputBuffer = new char[500];
                 while(true) {
                     charsRead = reader.read(inputBuffer);
-                    if(charsRead < 0) {
+                    if(charsRead < 0)
                         break;
-                    }
+
                     if(charsRead > 0) {
-                        xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead));
+                        //xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead));
+                        xmlResult.append(String.copyValueOf(inputBuffer,0,charsRead));
+
                     }
                 }
                 reader.close();//when buffered reader closes, input Stream reader and input stream closes as well
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             } catch(SecurityException e) {
                 Log.e(TAG, "downloadXML: Security Exception.  Needs permisson? " + e.getMessage());
             }
-            return null; 
+            return "kati";
         }
 
     }
