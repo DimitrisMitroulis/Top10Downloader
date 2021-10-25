@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 );
     }
 
-    private class DownloadData extends AsyncTask<String, Void, String> {//String is url to rss feed , where void is for displaying progress bars,  String for return
+    private static class DownloadData extends AsyncTask<String, Void, String> {//String is url to rss feed , where void is for displaying progress bars,  String for return
         private static final String TAG = "Download";
 
         @Override
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "doInBackground:  starts with " + strings[0]);
             String RssFeed = downloadFXML(strings[0]);
             if (RssFeed == null) {
-                Log.d(TAG, "doInBackground: Error downloading");
+                Log.e(TAG, "doInBackground: Error downloading");
 
             }
             return RssFeed;
@@ -92,34 +92,35 @@ public class MainActivity extends AppCompatActivity {
         private String downloadFXML(String urlPath) {
             StringBuilder xmlResult = new StringBuilder();
 
+
             try {
                 URL url = new URL(urlPath);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 int response = connection.getResponseCode();
-                Log.d(TAG, "downloadFXML: The response code is " + response);
+                Log.d(TAG, "downloadXML: The response code was " + response);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                 int charsRead;
                 char[] inputBuffer = new char[500];
-                while (true) {
-                    charsRead = reader.read();
-                    if (charsRead < 0)
+                while(true) {
+                    charsRead = reader.read(inputBuffer);
+                    if(charsRead < 0) {
                         break;
-                    if (charsRead > 0) {
-                        xmlResult.append(String.copyValueOf(inputBuffer, 1, charsRead));
+                    }
+                    if(charsRead > 0) {
+                        xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead));
                     }
                 }
                 reader.close();//when buffered reader closes, input Stream reader and input stream closes as well
 
                 return xmlResult.toString();
 
-            } catch (MalformedURLException e) {
-                Log.d(TAG, "downloadFXML: Invalid URL" + e.getMessage());
-            }catch(SecurityException e){
-                Log.d(TAG, "downloadFXML: Security Exception,needs permission"+e.getMessage());
-            } catch (IOException e) {
-                Log.d(TAG, "downloadFXML: Other error" + e.getMessage());
-                e.printStackTrace();
+            } catch(MalformedURLException e) {
+                Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage());
+            } catch(IOException e) {
+                Log.e(TAG, "downloadXML: IO Exception reading data: " + e.getMessage());
+            } catch(SecurityException e) {
+                Log.e(TAG, "downloadXML: Security Exception.  Needs permisson? " + e.getMessage());
             }
             return null; 
         }
