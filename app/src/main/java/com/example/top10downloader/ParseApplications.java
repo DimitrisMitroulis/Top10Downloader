@@ -23,7 +23,7 @@ public class ParseApplications {
 
     public boolean parse(String xmlData){
         boolean Status = true;
-        FeedEntry currentRecord;    //for every new entry we create a new feedEntry obj
+        FeedEntry currentRecord;   //for every new entry we create a new feedEntry obj
         boolean inEntry = false;
         String textValue = "";
 
@@ -36,10 +36,7 @@ public class ParseApplications {
                 xpp.nextToken();
 
             }
-        }catch(XmlPullParserException e){
-            Status =false;
-            e.printStackTrace();
-        }catch(Exception e){
+        } catch(Exception e){
             Status =false;
             e.printStackTrace();
         }
