@@ -36,7 +36,10 @@ public class ParseApplications {
                 xpp.nextToken();
 
             }
-        } catch(Exception e){
+        }catch(XmlPullParserException e){
+            Status =false;
+            e.printStackTrace();
+        }catch(Exception e){
             Status =false;
             e.printStackTrace();
         }

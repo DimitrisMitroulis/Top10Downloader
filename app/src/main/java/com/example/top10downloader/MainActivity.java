@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             DownloadData downloadData = new DownloadData();
             downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml");
 
-            button.setVisibility(View.GONE);//View.VISIBLE
+            button.setVisibility(View.GONE);
             buttonState = View.GONE;
         };
         button.setOnClickListener(ButtonListener);
