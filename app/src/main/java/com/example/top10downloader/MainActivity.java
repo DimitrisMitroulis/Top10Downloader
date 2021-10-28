@@ -26,7 +26,21 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private int buttonState;
     private static final String STATE_BUTTON = "buttonState";
+    
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        buttonState = savedInstanceState.getInt(STATE_BUTTON);
+        button.setVisibility(buttonState);
+    }//to restore state of button
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt(STATE_BUTTON, buttonState);
+        super.onSaveInstanceState(outState);
+    }//to save state of button
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -45,24 +59,9 @@ public class MainActivity extends AppCompatActivity {
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");
+     }
 
-
-
-
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        buttonState = savedInstanceState.getInt(STATE_BUTTON);
-        button.setVisibility(buttonState);
-    }//to save state of button
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(STATE_BUTTON, buttonState);
-        super.onSaveInstanceState(outState);
-    }//to save state of button
+    
 
     private void hideNavBar() {
         Objects.requireNonNull(getSupportActionBar()).hide();
