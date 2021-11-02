@@ -24,14 +24,14 @@ import static java.lang.Thread.sleep;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main activity";
     private Button button;
-    //private int buttonState;
+    private int buttonState;
     private static final String STATE_BUTTON = "buttonState";
     
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        //buttonState = savedInstanceState.getInt(STATE_BUTTON);
-        button.setVisibility(savedInstanceState.getInt(STATE_BUTTON));
+        buttonState = savedInstanceState.getInt(STATE_BUTTON);
+        button.setVisibility(buttonState);
     }//to restore state of button
 
     @Override

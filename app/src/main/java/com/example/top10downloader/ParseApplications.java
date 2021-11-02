@@ -1,5 +1,7 @@
 package com.example.top10downloader;
 
+import android.util.Log;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -8,9 +10,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 
 public class ParseApplications {
-//class to parse thought the rss feed of top 10 applications
+    //class to parse thought the rss feed of top 10 applications
     private static final String TAG = "Parse Applications";
-    private ArrayList <FeedEntry> applications;
+    private ArrayList<FeedEntry> applications;
 
     public ParseApplications() {
         //initialize ArrayList
@@ -21,26 +23,64 @@ public class ParseApplications {
         return applications;
     }
 
-    public boolean parse(String xmlData){
+    public boolean parse(String xmlData) {
         boolean Status = true;
-        FeedEntry currentRecord;   //for every new entry we create a new feedEntry obj
+        FeedEntry currentRecord = null;   //for every new entry we create a new feedEntry obj
         boolean inEntry = false;
         String textValue = "";
 
-        try{
+        try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput(new StringReader(xmlData));
-            while(xpp.getEventType() != XmlPullParser.END_DOCUMENT){
-                xpp.nextToken();
+            int eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String tagName = xpp.getName();
+                switch (eventType) {
+                    case XmlPullParser.START_TAG:
+                        Log.d(TAG, "parse: Starting tag for" + tagName);
+                        if ("entry".equalsIgnoreCase(tagName)) {
+                            inEntry = true;
+                            currentRecord = new FeedEntry();
+                        }
+                        break;
+                    case XmlPullParser.TEXT:
+                        textValue = xpp.getText();
+                        break;
+                    case XmlPullParser.END_TAG:
+                        Log.d(TAG, "parse: " + tagName);
+                        if (inEntry) {
+                            if ("entry".equalsIgnoreCase(tagName)) {
+                                applications.add(currentRecord);
+                                inEntry = false;
+
+                            }else if ("name".equalsIgnoreCase(tagName)) {
+                                currentRecord.setName(textValue);
+                            }else if ("artist".equalsIgnoreCase(tagName)) {
+                                currentRecord.setArtist(textValue);
+                            }else if ("releaseDate".equalsIgnoreCase(tagName)) {
+                                currentRecord.setReleaseDate(textValue);
+                            }else if ("summary".equalsIgnoreCase(tagName)) {
+                                currentRecord.setSummary(textValue);
+                            }else if ("image".equalsIgnoreCase(tagName)) {
+                                currentRecord.setImageURL(textValue);
+
+                            }
+                        }
+                        break;
+
+                    default:
+                        //Nothing to do here
+                }
+                eventType = xpp.next();
 
             }
-        }catch(XmlPullParserException e){
-            Status =false;
+        } catch (XmlPullParserException e) {
+            Status = false;
             e.printStackTrace();
-        }catch(Exception e){
-            Status =false;
+        } catch (Exception e) {
+            Status = false;
             e.printStackTrace();
         }
 
