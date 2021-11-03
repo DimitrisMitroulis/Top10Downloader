@@ -77,12 +77,14 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d(TAG, "onPostExecute: parameter is " + s);
+            ParseApplications parseApplications = new ParseApplications();
+            parseApplications.parse(s); //s is the xml file
         }
 
 
         @Override
         protected String doInBackground(String... strings) {
-            Log.d(TAG, "doInBackground:  starts with " + strings[0]);
+            //Log.d(TAG, "doInBackground:  starts with " + strings[0]);
             String RssFeed = downloadFXML(strings[0]);
             if (RssFeed == null) {
                 Log.e(TAG, "doInBackground: Error downloading");
