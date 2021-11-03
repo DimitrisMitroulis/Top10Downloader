@@ -1,15 +1,16 @@
 package com.example.top10downloader;
 
+import android.util.Log;
+
 public class FeedEntry {
+    private final String TAG ="Feed Entry";
     private String name,artist,releaseDate,summary,imageURL;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
     public String getArtist() {
         return artist;
@@ -25,6 +26,7 @@ public class FeedEntry {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+        releaseDate = releaseDate.substring(0,10);// to show only date, not hour
     }
 
     public String getSummary() {
