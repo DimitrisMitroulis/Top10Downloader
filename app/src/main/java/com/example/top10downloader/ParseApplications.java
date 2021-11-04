@@ -28,6 +28,7 @@ public class ParseApplications {
         FeedEntry currentRecord = null;   //for every new entry we create a new feedEntry obj
         boolean inEntry = false;
         String textValue = "";
+        boolean gotImage = false;
 
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -43,6 +44,11 @@ public class ParseApplications {
                         if ("entry".equalsIgnoreCase(tagName)) {
                             inEntry = true;
                             currentRecord = new FeedEntry();
+                        }else if(("image".equalsIgnoreCase(tagName))&& inEntry) {
+                            String imageResolution = xpp.getAttributeValue(null,"height");
+                            if(imageResolution != null){
+                                gotImage = "53".equalsIgnoreCase(imageResolution);
+                            }
                         }
                         break;
                     case XmlPullParser.TEXT:
@@ -64,8 +70,9 @@ public class ParseApplications {
                             }else if ("summary".equalsIgnoreCase(tagName)) {
                                 currentRecord.setSummary(textValue);
                             }else if ("image".equalsIgnoreCase(tagName)) {
-                                currentRecord.setImageURL(textValue);
-
+                                if(gotImage) {
+                                    currentRecord.setImageURL(textValue);
+                                }
                             }
                         }
                         break;
