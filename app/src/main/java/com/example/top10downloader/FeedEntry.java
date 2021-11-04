@@ -26,7 +26,7 @@ public class FeedEntry {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
-        releaseDate = releaseDate.substring(0,10);// to show only date, not hour
+        releaseDate = releaseDate.substring(0,10);// to show only date
     }
 
     public String getSummary() {
