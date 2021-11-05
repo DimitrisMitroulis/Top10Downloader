@@ -7,7 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static java.lang.Thread.sleep;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private int buttonState;
     private static final String STATE_BUTTON = "buttonState";
+    private ListView listView ;
     
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         hideNavBar();
         Log.d(TAG, "onCreate: starting AsyncTask");
+
+        listView = (ListView) findViewById(R.id.xmlListView);
         button = findViewById(R.id.button);
         View.OnClickListener ButtonListener = view -> {
 
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 );
     }
 
-    private static class DownloadData extends AsyncTask<String, Void, String> {//String is url to rss feed , where void is for displaying progress bars, String for return
+    private class DownloadData extends AsyncTask<String, Void, String> {//String is url to rss feed , where void is for displaying progress bars, String for return
         private static final String TAG = "Download";
 
         @Override
@@ -79,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
             //Log.d(TAG, "onPostExecute: parameter is " + s);
             ParseApplications parseApplications = new ParseApplications();
             parseApplications.parse(s); //s is the xml file
+
+            ArrayAdapter<FeedEntry> arrayAdapter = new ArrayAdapter<FeedEntry>(
+                    MainActivity.this, R.layout.list_item,parseApplications.getApplications());   //array adapter will be using feed entry obj
+            listView.setAdapter(arrayAdapter);
         }
 
 
