@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
             button.setVisibility(View.GONE);
             buttonState = View.GONE;
+            setContentView(R.layout.list_record);
+
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");

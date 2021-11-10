@@ -8,9 +8,11 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="247dp"
-        android:layout_height="71dp"
+        android:layout_width="249dp"
+        android:layout_height="79dp"
+        android:layout_marginTop="69dp"
         android:text="@string/download"
+        app:cornerRadius="38dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
