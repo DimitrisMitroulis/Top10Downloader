@@ -29,18 +29,22 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private int buttonState;
     private static final String STATE_BUTTON = "buttonState";
+    private static final String LAYOUT_CHANGED = "layoutState";
+    private boolean layoutChanged= false;
     private ListView listView ;
-    
+
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         buttonState = savedInstanceState.getInt(STATE_BUTTON);
+        if(savedInstanceState.getBoolean(LAYOUT_CHANGED)){ setContentView(R.layout.list_record); }//to save layout if it has changed
         button.setVisibility(buttonState);
     }//to restore state of button
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(STATE_BUTTON, buttonState);
+        outState.putBoolean(LAYOUT_CHANGED,layoutChanged);
         super.onSaveInstanceState(outState);
     }//to save state of button
     
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             button.setVisibility(View.GONE);
             buttonState = View.GONE;
             setContentView(R.layout.list_record);
+            layoutChanged = true;
 
         };
         button.setOnClickListener(ButtonListener);
