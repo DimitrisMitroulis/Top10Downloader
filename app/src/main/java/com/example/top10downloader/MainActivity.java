@@ -29,22 +29,20 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private int buttonState;
     private static final String STATE_BUTTON = "buttonState";
-    private static final String LAYOUT_CHANGED = "layoutState";
-    private boolean layoutChanged= false;
-    private ListView listView ;
+    private ListView listApps ;
 
+
+    
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         buttonState = savedInstanceState.getInt(STATE_BUTTON);
-        if(savedInstanceState.getBoolean(LAYOUT_CHANGED)){ setContentView(R.layout.list_record); }//to save layout if it has changed
         button.setVisibility(buttonState);
     }//to restore state of button
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(STATE_BUTTON, buttonState);
-        outState.putBoolean(LAYOUT_CHANGED,layoutChanged);
         super.onSaveInstanceState(outState);
     }//to save state of button
     
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         hideNavBar();
         Log.d(TAG, "onCreate: starting AsyncTask");
 
-        listView = (ListView) findViewById(R.id.xmlListView);
+        listApps = (ListView) findViewById(R.id.xmlListView);
         button = findViewById(R.id.button);
         View.OnClickListener ButtonListener = view -> {
 
@@ -66,9 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
             button.setVisibility(View.GONE);
             buttonState = View.GONE;
-            setContentView(R.layout.list_record);
-            layoutChanged = true;
-
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");
@@ -95,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
             ArrayAdapter<FeedEntry> arrayAdapter = new ArrayAdapter<FeedEntry>(
                     MainActivity.this, R.layout.list_item,parseApplications.getApplications());   //array adapter will be using feed entry obj
-            listView.setAdapter(arrayAdapter);
+            listApps.setAdapter(arrayAdapter);
         }
 
 
