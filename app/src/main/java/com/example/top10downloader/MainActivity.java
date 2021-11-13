@@ -88,9 +88,12 @@ public class MainActivity extends AppCompatActivity {
             ParseApplications parseApplications = new ParseApplications();
             parseApplications.parse(s); //s is the xml file
 
-            ArrayAdapter<FeedEntry> arrayAdapter = new ArrayAdapter<FeedEntry>(
-                    MainActivity.this, R.layout.list_item,parseApplications.getApplications());   //array adapter will be using feed entry obj
-            listApps.setAdapter(arrayAdapter);
+//            ArrayAdapter<FeedEntry> arrayAdapter = new ArrayAdapter<FeedEntry>(
+//                    MainActivity.this, R.layout.list_item,parseApplications.getApplications());   //array adapter will be using feed entry obj
+//            listApps.setAdapter(arrayAdapter);
+
+            FeedAdapter feedAdapter = new FeedAdapter(MainActivity.this, R.layout.list_record,parseApplications.getApplications());
+            listApps.setAdapter(feedAdapter);
         }
 
 
