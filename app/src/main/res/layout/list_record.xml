@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/Name"
+        android:id="@+id/tvName"
         android:layout_width="383dp"
         android:layout_height="36dp"
         android:layout_marginStart="16dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/Artist"
+        android:id="@+id/tvArtist"
         android:layout_width="377dp"
         android:layout_height="22dp"
         android:layout_marginStart="16dp"
@@ -31,18 +31,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Name" />
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
     <TextView
-        android:id="@+id/Summary"
+        android:id="@+id/tvSummary"
         android:layout_width="0dp"
         android:layout_height="262dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:text="Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah "
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Artist" />
+        app:layout_constraintTop_toBottomOf="@+id/tvArtist" />
 </androidx.constraintlayout.widget.ConstraintLayout>
