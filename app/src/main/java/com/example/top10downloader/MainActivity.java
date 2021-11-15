@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private int buttonState;
     private static final String STATE_BUTTON = "buttonState";
     private ListView listApps ;
+    private boolean state = false;
 
 
     
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        hideNavBar();
+        //hideNavBar();
         Log.d(TAG, "onCreate: starting AsyncTask");
 
         listApps = (ListView) findViewById(R.id.xmlListView);
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
             button.setVisibility(View.GONE);
             buttonState = View.GONE;
+
+
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");
@@ -73,9 +78,20 @@ public class MainActivity extends AppCompatActivity {
     private void hideNavBar() {
         Objects.requireNonNull(getSupportActionBar()).hide();
         this.getWindow().getDecorView()
-                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 );
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.feeds_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     private class DownloadData extends AsyncTask<String, Void, String> {//String is url to rss feed , where void is for displaying progress bars, String for return

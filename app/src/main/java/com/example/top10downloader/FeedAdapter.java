@@ -35,26 +35,25 @@ public class FeedAdapter extends ArrayAdapter {
     @NonNull
     @Override//gets callled everytime you scroll and needs a new view to display
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        ViewHolder viewHolder;
+        ViewHolder viewHolder;//create an obj of viewHolder
         if(convertView == null){
             convertView = layoutInflater.inflate(layoutResource,parent,false);// to reuse the view if available and not create a new one
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }else{
-
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
 //        TextView tvName = (TextView) convertView.findViewById(R.id.tvName);//find view by id is a costly operation and we do it multiple times
-////        TextView tvArtist = (TextView) convertView.findViewById(R.id.tvArtist);
-////        TextView tvSummary  = (TextView) convertView.findViewById(R.id.tvSummary);
+////      TextView tvArtist = (TextView) convertView.findViewById(R.id.tvArtist);
+////      TextView tvSummary  = (TextView) convertView.findViewById(R.id.tvSummary);
 
 
 
         FeedEntry currentApp = applications.get(position);
         viewHolder.tvName.setText(currentApp.getName());
         viewHolder.tvArtist.setText(currentApp.getArtist());
-        //tvSummary.setText(currentApp.getSummary());
+        viewHolder.tvSummary.setText(currentApp.getSummary());
 
         return convertView;
     }
