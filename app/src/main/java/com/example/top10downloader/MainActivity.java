@@ -31,11 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private int buttonState;
     private static final String STATE_BUTTON = "buttonState";
-    private ListView listApps ;
+    private ListView listApps;
     private boolean state = false;
+    private String feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
+    private int feedLimit = 10;
 
 
-    
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         outState.putInt(STATE_BUTTON, buttonState);
         super.onSaveInstanceState(outState);
     }//to save state of button
-    
-    
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -63,21 +64,21 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener ButtonListener = view -> {
 
 
-            downloadURL("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=5/xml");
+            downloadURL(String.format(feedURL,feedLimit));
 
             button.setVisibility(View.GONE);
             buttonState = View.GONE;
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");
-     }
+    }
 
-    
+
     private void hideNavBar() {
         Objects.requireNonNull(getSupportActionBar()).hide();
         this.getWindow().getDecorView()
                 .setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 );
     }
 
@@ -92,25 +93,42 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //called when an item is selected from menu
         int id = item.getItemId();
-        String feedURL;
 
-        switch (id){
+        switch (id) {
             case R.id.mnuFree:
-                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml";
+                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
+                downloadURL(String.format(feedURL,feedLimit));
                 break;
             case R.id.mnuPaid:
-                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/limit=10/xml";
+                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/limit=%d/xml";
+                downloadURL(String.format(feedURL,feedLimit));
                 break;
             case R.id.mnuSongs:
-                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=10/xml";
+                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=%d/xml";
+                downloadURL(String.format(feedURL,feedLimit));
+                break;
+            case R.id.mnu10:
+            case R.id.mnu25:
+                if(!item.isChecked()){
+                    item.setChecked(true);
+                    feedLimit = 35 - feedLimit;
+                    Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "setting feedLimit to " + feedLimit);
+                    downloadURL(String.format(feedURL,feedLimit));
+                }else{
+                    Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "setting feedLimit to unchanged");
+                }
+
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        downloadURL(feedURL);
+
+        Log.d(TAG, "onOptionsItemSelected: feedURL" + feedURL);
+
         return super.onOptionsItemSelected(item);
     }
-    private void  downloadURL(String feedURL){
+
+    private void downloadURL(String feedURL) {
         button.setVisibility(View.GONE);
         buttonState = View.GONE;
         Log.d(TAG, "downloadURL: Starting Download");
@@ -135,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 //                    MainActivity.this, R.layout.list_item,parseApplications.getApplications());   //array adapter will be using feed entry obj
 //            listApps.setAdapter(arrayAdapter);
 
-            FeedAdapter feedAdapter = new FeedAdapter(MainActivity.this, R.layout.list_record,parseApplications.getApplications());
+            FeedAdapter feedAdapter = new FeedAdapter(MainActivity.this, R.layout.list_record, parseApplications.getApplications());
             listApps.setAdapter(feedAdapter);
         }
 
@@ -162,14 +180,14 @@ public class MainActivity extends AppCompatActivity {
 
                 int charsRead;
                 char[] inputBuffer = new char[500];
-                while(true) {
+                while (true) {
                     charsRead = reader.read(inputBuffer);
-                    if(charsRead < 0)
+                    if (charsRead < 0)
                         break;
 
-                    if(charsRead > 0) {
+                    if (charsRead > 0) {
                         //xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead));
-                        xmlResult.append(String.copyValueOf(inputBuffer,0,charsRead));
+                        xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead));
 
                     }
                 }
@@ -177,11 +195,11 @@ public class MainActivity extends AppCompatActivity {
 
                 return xmlResult.toString();
 
-            } catch(MalformedURLException e) {
+            } catch (MalformedURLException e) {
                 Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage());
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Log.e(TAG, "downloadXML: IO Exception reading data: " + e.getMessage());
-            } catch(SecurityException e) {
+            } catch (SecurityException e) {
                 Log.e(TAG, "downloadXML: Security Exception.  Needs permisson? " + e.getMessage());
             }
             return null;
