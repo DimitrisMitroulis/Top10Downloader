@@ -62,13 +62,11 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         View.OnClickListener ButtonListener = view -> {
 
-            DownloadData downloadData = new DownloadData();
-            downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=200/xml");
+
+            downloadURL("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=5/xml");
 
             button.setVisibility(View.GONE);
             buttonState = View.GONE;
-
-
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");
@@ -86,12 +84,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.feeds_menu, menu);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //called when an item is selected from menu
+        int id = item.getItemId();
+        String feedURL;
+
+        switch (id){
+            case R.id.mnuFree:
+                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml";
+                break;
+            case R.id.mnuPaid:
+                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/limit=10/xml";
+                break;
+            case R.id.mnuSongs:
+                feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=10/xml";
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        downloadURL(feedURL);
         return super.onOptionsItemSelected(item);
+    }
+    private void  downloadURL(String feedURL){
+        button.setVisibility(View.GONE);
+        buttonState = View.GONE;
+        Log.d(TAG, "downloadURL: Starting Download");
+        DownloadData downloadData = new DownloadData();
+        downloadData.execute(feedURL);
+        Log.d(TAG, "downloadURL: Download Finished!");
+
+
     }
 
     private class DownloadData extends AsyncTask<String, Void, String> {//String is url to rss feed , where void is for displaying progress bars, String for return
