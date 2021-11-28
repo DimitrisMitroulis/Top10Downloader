@@ -1,5 +1,6 @@
 package com.example.top10downloader;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean state = false;
     private String feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
     private int feedLimit = 10;
+    String currFeedURL= String.format(feedURL,feedLimit);
+
 
 
     @Override
@@ -86,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.feeds_menu, menu);
 
+//        if(feedLimit == 10){
+//            menu.findItem(R.id.mnu10).setChecked(true);
+//
+//        }else {
+//            menu.findItem(R.id.mnu25).setChecked(true);
+//        }
         return true;
     }
 
@@ -94,18 +103,19 @@ public class MainActivity extends AppCompatActivity {
         //called when an item is selected from menu
         int id = item.getItemId();
 
+
+
+
+
         switch (id) {
             case R.id.mnuFree:
                 feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
-                downloadURL(String.format(feedURL,feedLimit));
                 break;
             case R.id.mnuPaid:
                 feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/limit=%d/xml";
-                downloadURL(String.format(feedURL,feedLimit));
                 break;
             case R.id.mnuSongs:
                 feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=%d/xml";
-                downloadURL(String.format(feedURL,feedLimit));
                 break;
             case R.id.mnu10:
             case R.id.mnu25:
@@ -113,16 +123,23 @@ public class MainActivity extends AppCompatActivity {
                     item.setChecked(true);
                     feedLimit = 35 - feedLimit;
                     Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "setting feedLimit to " + feedLimit);
-                    downloadURL(String.format(feedURL,feedLimit));
                 }else{
                     Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "setting feedLimit to unchanged");
                 }
-
                 break;
             default:
                 return super.onOptionsItemSelected(item);
-        }
+            }
 
+            Log.d(TAG, "currFeed: "+ currFeedURL+ "feedURL " +String.format(feedURL,feedLimit));
+            Log.d(TAG, "onOptionsItemSelected: "+ currFeedURL.equals(String.format(feedURL, feedLimit)));
+            if(currFeedURL.equals(String.format(feedURL, feedLimit))){
+                Log.d(TAG, "url the same!: ");
+            }else {
+                currFeedURL = String.format(feedURL,feedLimit);
+                Log.d(TAG, "url different!: ");
+                downloadURL(String.format(feedURL,feedLimit));
+            }
         Log.d(TAG, "onOptionsItemSelected: feedURL" + feedURL);
 
         return super.onOptionsItemSelected(item);
