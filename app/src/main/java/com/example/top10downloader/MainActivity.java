@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean state = false;
     private String feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
     private int feedLimit = 10;
-    String currFeedURL= String.format(feedURL,feedLimit);
+    String currFeedURL = String.format(feedURL,feedLimit);
 
 
 
@@ -104,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
 
-
-
-
         switch (id) {
             case R.id.mnuFree:
                 feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
@@ -116,6 +113,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.mnuSongs:
                 feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=%d/xml";
+                break;
+            case R.id.mnuRefresh:
+                if(buttonState == View.GONE) {
+                    downloadURL(String.format(feedURL, feedLimit));
+                    }
                 break;
             case R.id.mnu10:
             case R.id.mnu25:
@@ -127,13 +129,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "setting feedLimit to unchanged");
                 }
                 break;
-            default:
+
+                default:
                 return super.onOptionsItemSelected(item);
             }
 
-            Log.d(TAG, "currFeed: "+ currFeedURL+ "feedURL " +String.format(feedURL,feedLimit));
-            Log.d(TAG, "onOptionsItemSelected: "+ currFeedURL.equals(String.format(feedURL, feedLimit)));
-            if(currFeedURL.equals(String.format(feedURL, feedLimit))){
+            //Log.d(TAG, "currFeed: "+ currFeedURL+ "feedURL " +String.format(feedURL,feedLimit));
+            //Log.d(TAG, "onOptionsItemSelected: "+ currFeedURL.equals(String.format(feedURL, feedLimit)));//just for debugging
+            if(currFeedURL.equals(String.format(feedURL, feedLimit)) || buttonState != View.GONE){
                 Log.d(TAG, "url the same!: ");
             }else {
                 currFeedURL = String.format(feedURL,feedLimit);

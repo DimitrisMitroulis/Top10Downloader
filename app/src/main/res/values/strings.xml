@@ -5,4 +5,7 @@
     <string name="item3">Item3</string>
     <string name="Free_Apps">Free Apps</string>
     <string name="Songs">Songs</string>
+    <string name="top_10">Top 10</string>
+    <string name="top_25">Top 25</string>
+    <string name="refresh">Refresh</string>
 </resources>

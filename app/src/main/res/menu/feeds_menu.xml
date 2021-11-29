@@ -17,10 +17,13 @@
         <item
             android:id="@+id/mnu10"
             android:checked="true"
-            android:title="Top 10" />
+            android:title="@string/top_10" />
         <item
             android:id="@+id/mnu25"
             android:checked="false"
-            android:title="Top 25" />
+            android:title="@string/top_25" />
     </group>
+    <item
+        android:id="@+id/mnuRefresh"
+        android:title="@string/refresh" />
 </menu>
