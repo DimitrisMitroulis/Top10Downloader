@@ -36,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean state = false;
     private String feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
     private int feedLimit = 10;
-    String currFeedURL = String.format(feedURL,feedLimit);
-
+    String currFeedURL = String.format(feedURL, feedLimit);
+    public static final String STATE_URL = "feedUrl";
+    public static final String STATE_LIMIT = "feedLimit";
+    public static final String STATE_CURRURL = "currFeed";
 
 
     @Override
@@ -45,35 +47,52 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         buttonState = savedInstanceState.getInt(STATE_BUTTON);
         button.setVisibility(buttonState);
-    }//to restore state of button
+
+        feedURL = savedInstanceState.getString(STATE_URL);
+        feedLimit = savedInstanceState.getInt(STATE_LIMIT);
+        currFeedURL = savedInstanceState.getString(STATE_CURRURL);
+        Refresh();
+    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(STATE_BUTTON, buttonState);
+
+        outState.putString(STATE_URL, feedURL);
+        outState.putInt(STATE_LIMIT, feedLimit);
+        outState.putString(STATE_CURRURL, currFeedURL);
+
         super.onSaveInstanceState(outState);
-    }//to save state of button
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //hideNavBar();
-        Log.d(TAG, "onCreate: starting AsyncTask");
+
+
+
+//        if (savedInstanceState != null) {
+//            feedURL = savedInstanceState.getString(STATE_URL);
+//            feedLimit = savedInstanceState.getInt(STATE_LIMIT);
+//            currFeedURL = savedInstanceState.getString(STATE_CURRURL);
+//        }
 
         listApps = (ListView) findViewById(R.id.xmlListView);
         button = findViewById(R.id.button);
         View.OnClickListener ButtonListener = view -> {
 
 
-            downloadURL(String.format(feedURL,feedLimit));
+            downloadURL(String.format(feedURL, feedLimit));
 
             button.setVisibility(View.GONE);
             buttonState = View.GONE;
         };
         button.setOnClickListener(ButtonListener);
         Log.d(TAG, "onCreate: Done");
+        //Refresh();
     }
 
 
@@ -98,12 +117,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+    public void Refresh() {
+        Log.d(TAG, "Refresh: "+(buttonState == View.GONE));
+        if (buttonState == View.GONE) {
+
+            downloadURL(String.format(feedURL, feedLimit));
+
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //called when an item is selected from menu
         int id = item.getItemId();
-
-
         switch (id) {
             case R.id.mnuFree:
                 feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
@@ -115,34 +142,32 @@ public class MainActivity extends AppCompatActivity {
                 feedURL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=%d/xml";
                 break;
             case R.id.mnuRefresh:
-                if(buttonState == View.GONE) {
-                    downloadURL(String.format(feedURL, feedLimit));
-                    }
+                Refresh();
                 break;
             case R.id.mnu10:
             case R.id.mnu25:
-                if(!item.isChecked()){
+                if (!item.isChecked()) {
                     item.setChecked(true);
                     feedLimit = 35 - feedLimit;
                     Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "setting feedLimit to " + feedLimit);
-                }else{
+                } else {
                     Log.d(TAG, "onOptionsItemSelected: " + item.getTitle() + "setting feedLimit to unchanged");
                 }
                 break;
 
-                default:
+            default:
                 return super.onOptionsItemSelected(item);
-            }
+        }
 
-            //Log.d(TAG, "currFeed: "+ currFeedURL+ "feedURL " +String.format(feedURL,feedLimit));
-            //Log.d(TAG, "onOptionsItemSelected: "+ currFeedURL.equals(String.format(feedURL, feedLimit)));//just for debugging
-            if(currFeedURL.equals(String.format(feedURL, feedLimit)) || buttonState != View.GONE){
-                Log.d(TAG, "url the same!: ");
-            }else {
-                currFeedURL = String.format(feedURL,feedLimit);
-                Log.d(TAG, "url different!: ");
-                downloadURL(String.format(feedURL,feedLimit));
-            }
+        //Log.d(TAG, "currFeed: "+ currFeedURL+ "feedURL " +String.format(feedURL,feedLimit));
+        //Log.d(TAG, "onOptionsItemSelected: "+ currFeedURL.equals(String.format(feedURL, feedLimit)));//just for debugging
+        if (currFeedURL.equals(String.format(feedURL, feedLimit)) || buttonState != View.GONE) {
+            Log.d(TAG, "url the same!: ");
+        } else {
+            currFeedURL = String.format(feedURL, feedLimit);
+            Log.d(TAG, "url different!: ");
+            downloadURL(String.format(feedURL, feedLimit));
+        }
         Log.d(TAG, "onOptionsItemSelected: feedURL" + feedURL);
 
         return super.onOptionsItemSelected(item);
